@@ -1,28 +1,25 @@
-Title: Smart Traffic Management System with IoT
+#include <NewPing.h>
 
-Abstract:
-The project, titled "Smart Traffic Management System with IoT," 
-aims to leverage IoT devices and data analytics to revolutionize the way we manage and navigate urban traffic. 
-In this endeavor, the primary objectives are to monitor real-time traffic conditions, detect congestion, optimize routes,
-and enhance the overall commuting experience for the public. 
+#define TRIGGER_PIN 12  // Arduino pin tied to trigger pin on the ultrasonic sensor.
+#define ECHO_PIN 11     // Arduino pin tied to echo pin on the ultrasonic sensor.
+#define MAX_DISTANCE 400 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
 
-This project involves a comprehensive design thinking approach:
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
 
-Defining Objectives: The project starts with a clear definition of its goals, 
-including real-time traffic monitoring, congestion detection, route optimization, and 
-improving the quality of commuting.
+void setup() {
+  Serial.begin(9600); // Open a serial connection to display distance information.
+}
 
-IoT Sensor Deployment: Careful planning and deployment of IoT sensors across strategic 
-locations to effectively monitor traffic flow and congestion patterns.
+void loop() {
+  delay(500); // Wait 500ms between pings (adjust as needed).
 
-Real-Time Information Platform: Designing and developing a user-friendly web-based platform 
-and mobile applications that provide commuters with up-to-the-minute traffic information, empowering 
-them to make informed decisions.
+  unsigned int distance = sonar.ping_cm(); // Send ping, get distance in centimeters.
 
-Integration: Seamlessly integrating IoT technology and Python to connect the traffic monitoring 
-system with the public platform, ensuring a smooth flow of data and information.
-
-In conclusion, this project embodies innovation in traffic management by harnessing the power 
-of IoT and data analytics. It envisions a future where commuters can navigate cities with ease, 
-reduce congestion, and optimize their routes, ultimately contributing to a more efficient and enjoyable urban 
-commuting experience
+  if (distance >= 0) {
+    Serial.print("Distance: ");
+    Serial.print(distance);
+    Serial.println(" cm");
+  } else {
+    Serial.println("Error: Measurement timeout.");
+  }
+}
